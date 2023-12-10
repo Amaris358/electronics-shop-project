@@ -1,4 +1,7 @@
+import pytest
+
 from src.item import Item
+from src.phone import Phone
 
 item1 = Item('Микроволновая печь', 3000, 50)
 item2 = Item('Телевизор', 50000, 10)
@@ -48,3 +51,31 @@ def test_instantiate_from_csv():
     assert item_one.price == 10
     assert item_two.name == "Мышка"
     assert item_two.quantity == 5
+
+
+item_3 = Item('Зарядка', 500, 1000)
+item_4 = Item('Холодильник', 30000, 100)
+
+
+def test_str():
+    assert str(item_3) == 'Зарядка'
+    assert str(item_4) == 'Холодильник'
+
+
+def test_repr():
+    assert repr(item_3) == "Item('Зарядка', 500, 1000)"
+    assert repr(item_4) == "Item('Холодильник', 30000, 100)"
+
+
+item_test = Item('Утюг', 5000, 150)
+phone_test = Phone("Xiaomi MI8", 16000, 20, 2)
+phone_test2 = Phone("Oppo S7", 20000, 50, 2)
+
+
+def test_add():
+    assert item_test + phone_test == 170
+    assert phone_test + phone_test2 == 70
+    with pytest.raises(Exception):
+        assert phone_test + item_test
+        assert phone_test + 50
+
