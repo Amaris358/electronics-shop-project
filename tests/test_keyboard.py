@@ -1,15 +1,15 @@
 from src.keyboard import Keyboard
 import pytest
 
-kb = Keyboard("HyperX Alloy", 6000, 79)
+kb_one = Keyboard("HyperX Alloy", 6000, 79)
 
 
 def test_keyboard():
-    assert kb.language == "EN"
-    kb.change_lang()
-    assert kb.language == "RU"
-    kb.change_lang()
-    assert kb.language == "EN"
+    assert kb_one.language == "EN"
+    kb_one.change_lang()
+    assert kb_one.language == "RU"
+    kb_one.change_lang()
+    assert kb_one.language == "EN"
 
     with pytest.raises(AttributeError):
-        kb.language = "CH"
+        kb_one.language = "CH"
