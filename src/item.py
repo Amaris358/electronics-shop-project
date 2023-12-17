@@ -1,5 +1,14 @@
 import csv
-import typing
+
+
+class InstantiateCSVError(Exception):
+    """Класс ошибки при поврежденном файле"""
+
+    def __init__(self, *args, **kwargs):
+        self.error_message = "Файл item.csv поврежден"
+
+    def __str__(self, *args, **kwargs):
+        return self.error_message
 
 
 class Item:
@@ -48,19 +57,21 @@ class Item:
         self.price *= self.pay_rate
 
     @classmethod
-    def instantiate_from_csv(cls, file_name: typing.Any) -> None:
-        """
-        Создает экземпляры класса из файла csv.
-        """
-        with open(file_name, "r") as file:
-            dict_reader = csv.DictReader(file, delimiter=",")
-            for row in dict_reader:
-                name = row["name"]
-                price = Item.string_to_number(row["price"])
-                quantity = Item.string_to_number(row["quantity"])
-                Item.all.append(cls(name, price, quantity))
+    def instantiate_from_csv(cls, file_name):
+        try:
+            with open(file_name, "r") as file:
+                dict_reader = csv.DictReader(file, delimiter=",")
+                for row in dict_reader:
+                    if len(row) == 3:
+                        name = row["name"]
+                        price = Item.string_to_number(row["price"])
+                        quantity = Item.string_to_number(row["quantity"])
+                        Item.all.append(cls(name, price, quantity))
+                    else:
+                        raise InstantiateCSVError
+        except FileNotFoundError:
+            raise FileNotFoundError("Отсутствует файл item.csv")
 
-                
 
     @property
     def name(self):
@@ -78,6 +89,8 @@ class Item:
         if string.isdigit():
             return int(string)
         return int(float(string))
+
+
 
 
 

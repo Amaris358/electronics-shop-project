@@ -1,7 +1,8 @@
 import pytest
-
-from src.item import Item
+import pandas as pd
+from src.item import Item, InstantiateCSVError
 from src.phone import Phone
+
 
 item1 = Item('Микроволновая печь', 3000, 50)
 item2 = Item('Телевизор', 50000, 10)
@@ -78,4 +79,14 @@ def test_add():
     with pytest.raises(Exception):
         assert phone_test + item_test
         assert phone_test + 50
+
+
+def test_exceptions():
+    data_file = pd.read_csv("../src/items_broken.csv", encoding="utf-8")
+    assert data_file.shape == (2, 2)
+    with pytest.raises(FileNotFoundError):
+        assert pd.read_csv("../src/no_file.csv")
+    assert len(list(data_file.columns)) == 2
+    with pytest.raises(InstantiateCSVError):
+        assert Item.instantiate_from_csv("../src/items_broken.csv")
 
